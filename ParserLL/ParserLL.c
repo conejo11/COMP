@@ -6,30 +6,48 @@
 * Modificado para exercício de lógica. Aula de COMP              *
 * Gabriel Guebarra Conejo & Bruna Silva Tavares                  *
 ******************************************************************/
+/*
 
+	E  => TE'                                 
+	E' => ->TE'/
+		  <->TE'/
+		  vazio
+	T  => FT'
+	T' => |FT'/
+		  &FT'/
+		  vazio
+	F  => ~F'/
+		  F'
+	F' => c/
+		  (E)
+	*/
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>
 
+		  877+8734
+
 /* Nao terminais o bit mais significativo ligado indica que se trata de um nao
 terminal */
-#define EXPR   0x8001
-#define EXPRL  0x8002
-#define TERMO  0x8003
-#define TERMOL 0x8004
-#define FATOR  0x8005
+#define EXPR    0x8001     //
+#define EXPRL   0x8002
+#define TERMO   0x8003
+#define TERMOL  0x8004
+#define FATOR   0x8005
+#define FATORL  0x8006
 
 /* Terminais */
-#define ERRO 	0x0000
-#define AD     0x0100
-#define SUB 	0X0200
-#define MUL    0x0300
-#define DIV		0x0400
-#define CONST  0x0500
-#define APAR   0x0600
-#define FPAR   0x0700
-#define FIM    0x0800
+#define ERRO 	0x0000    // Erro?
+#define IMP     0x0100    // ->
+#define BIIMP 	0X0200    // <->
+#define OU      0x0300    // |
+#define E		0x0400    // &
+#define CONST   0x0500    // c
+#define APAR    0x0600    // (
+#define FPAR    0x0700    // )
+#define NOT     0x0800    // ~
+#define FIM     0x0900    // fim?
 
 //Mascaras
 #define NTER   0x8000
@@ -46,19 +64,21 @@ struct Pilha {
 /* Producoes a primeira posicao do vetor indica quantos simbolos
 gramaticais a producao possui em seu lado direito */
 
-const int PROD1[] = {2, TERMO, EXPRL};        // E  -> TE'
-const int PROD2[] = {3, AD, TERMO, EXPRL};    // E' -> +TE'
-const int PROD3[] = {3, SUB, TERMO, EXPRL};   // E' -> -TE'
-const int PROD4[] = {0};                      // E' -> vazio
-const int PROD5[] = {2, FATOR, TERMOL};       // T  -> FT'
-const int PROD6[] = {3, MUL, FATOR, TERMOL};  // T' -> *FT'
-const int PROD7[] = {3, DIV, FATOR, TERMOL};  // T' -> /FT'
-const int PROD8[] = {0};                      // T' -> vazio
-const int PROD9[] = {1, CONST};               // F  -> const
-const int PROD10[]= {3, APAR, EXPR, FPAR};    // F  -> (E)
+const int PROD1[]  = {2, TERMO, EXPRL};          // E   => TE'
+const int PROD2[]  = {3, IMP, TERMO, EXPRL};     // E'  => ->TE'
+const int PROD3[]  = {3, BIIMP, TERMO, EXPRL};   // E'  => <->TE'
+const int PROD4[]  = {0};                        // E'  => vazio
+const int PROD5[]  = {2, FATOR, TERMOL};         // T   => FT'
+const int PROD6[]  = {3, OU, FATOR, TERMOL};     // T'  => |FT'
+const int PROD7[]  = {3, E, FATOR, TERMOL};      // T'  => &FT'
+const int PROD8[]  = {0};                        // T'  => vazio
+const int PROD9[]  = {2, NOT, FATORL};           // F   => ~F'
+const int PROD10[] = {1, FATORL};                // F   => F'
+const int PROD11[] = {1, CONST};                 // F'  => const
+const int PROD12[] = {3, APAR, EXPR, FPAR};      // F'  => (E)
 
 // vetor utilizado para mapear um numero e uma producao.
-const int *PROD[] = {NULL, PROD1, PROD2, PROD3, PROD4, PROD5, PROD6, PROD7, PROD8, PROD9, PROD10};
+const int *PROD[] = {NULL, PROD1, PROD2, PROD3, PROD4, PROD5, PROD6, PROD7, PROD8, PROD9, PROD10, PROD11, PROD12};
 
 // Tabela sintatica LL(1). Os numeros correspondem as producoes acima.
 const int STAB[5][8] = {{0, 0, 0, 0, 1, 1, 0, 0},
