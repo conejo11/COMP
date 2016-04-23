@@ -6,7 +6,12 @@
 * Modificado para exercício de lógica. Aula de COMP              *
 * Gabriel Guebarra Conejo & Bruna Silva Tavares                  *
 ******************************************************************/
+<<<<<<< HEAD
+
+/*   Gramática Utilizada e produções
+=======
 /*
+>>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 
 	E  => TE'                                 
 	E' => ->TE'/
@@ -16,11 +21,32 @@
 	T' => |FT'/
 		  &FT'/
 		  vazio
+<<<<<<< HEAD
+	F  => ~F/
+=======
 	F  => ~F'/
+>>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 		  F'
 	F' => c/
 		  (E)
 	*/
+<<<<<<< HEAD
+
+
+/*    Tabela LL Utilizada
+	
+	->	<->	 &	|	~	c	(	)	#
+E	 0	 0	 0	0	1	1	1   0   0 
+E'	 2	 3	 0 	0   0   0   4   0   4					
+T    0   0   0  0   5   5   5   0   0        
+T'   8   8   6  7   0   0   0   8   8           
+F    0   0   0  0   9  10  10   0   0              
+F'   0   0   0  0   0  11  12   0   0        
+
+ */
+
+=======
+>>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -38,6 +64,18 @@ terminal */
 #define FATORL  0x8006
 
 /* Terminais */
+<<<<<<< HEAD
+#define ERRO 	 0x0000    // Erro?
+#define E        0x0100    // ->
+#define OU   	 0X0200    // <->
+#define IMP      0x0300    // |
+#define BIIMP	 0x0400    // &
+#define NOT      0x0500    // c
+#define CONST    0x0600    // (
+#define APAR     0x0700    // )
+#define FPAR     0x0800    // ~
+#define FIM      0x0900    // fim?
+=======
 #define ERRO 	0x0000    // Erro?
 #define IMP     0x0100    // ->
 #define BIIMP 	0X0200    // <->
@@ -48,6 +86,7 @@ terminal */
 #define FPAR    0x0700    // )
 #define NOT     0x0800    // ~
 #define FIM     0x0900    // fim?
+>>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 
 //Mascaras
 #define NTER   0x8000
@@ -72,7 +111,11 @@ const int PROD5[]  = {2, FATOR, TERMOL};         // T   => FT'
 const int PROD6[]  = {3, OU, FATOR, TERMOL};     // T'  => |FT'
 const int PROD7[]  = {3, E, FATOR, TERMOL};      // T'  => &FT'
 const int PROD8[]  = {0};                        // T'  => vazio
+<<<<<<< HEAD
+const int PROD9[]  = {2, NOT, FATOR};           // F   => ~F
+=======
 const int PROD9[]  = {2, NOT, FATORL};           // F   => ~F'
+>>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 const int PROD10[] = {1, FATORL};                // F   => F'
 const int PROD11[] = {1, CONST};                 // F'  => const
 const int PROD12[] = {3, APAR, EXPR, FPAR};      // F'  => (E)
@@ -81,11 +124,13 @@ const int PROD12[] = {3, APAR, EXPR, FPAR};      // F'  => (E)
 const int *PROD[] = {NULL, PROD1, PROD2, PROD3, PROD4, PROD5, PROD6, PROD7, PROD8, PROD9, PROD10, PROD11, PROD12};
 
 // Tabela sintatica LL(1). Os numeros correspondem as producoes acima.
-const int STAB[5][8] = {{0, 0, 0, 0, 1, 1, 0, 0},
-						{ 2, 3, 0, 0, 0, 0, 4, 4},
-						{ 0, 0, 0, 0, 5, 5, 0, 0},
-						{ 8, 8, 6, 7, 0, 0, 8, 8},
-						{ 0, 0, 0, 0, 9,10, 0, 0}};
+					 //   &  | -> <-> ~  c  (  )  #
+const int STAB[6][9] =  {{0, 0, 0, 0, 1, 1, 1, 0, 0}, //E
+						{ 0, 0, 2, 3, 0, 0, 4, 8, 4}, //E'
+						{ 0, 0, 0, 0, 5, 5, 5, 0, 0}, //T
+						{ 7, 6, 8, 8, 0, 0, 0, 8, 8}, //T'
+						{ 0, 0, 0, 0, 9,10,10, 0, 0}, //F
+						{ 0, 0, 0, 0, 0,11,12, 0, 0}};//F'
 
 /*****************************************************************
 * int lex (char *str, int *pos)                                  *
@@ -107,33 +152,34 @@ int lex (char *str, int *pos)
 		switch(estado)
 		{
 			case 0:
-				if (isdigit(c))
-				{
-					(*pos)++;
-					estado = 1;
-				}
-				else
 					switch (c)
 					{
 						case ' ':
 							(*pos)++;
 							break;
-						case '.':
+						case '<':       // inicio da bimplicaçao
+								(*pos)++;
+								estado = 1;
+								break;						
+						case '-':  		// inicio da implicaçao
 								(*pos)++;
 								estado = 2;
 								break;
-						case '+':
+						case '&':
 								(*pos)++;
-								return AD;
-						case '-':
+								return E;
+						case '|':            
 								(*pos)++;
-								return SUB;
-						case '*':
+								return OU;
+						case '~':
 								(*pos)++;
-								return MUL;
-						case '/':
+								return NOT;
+						case 'V':
 								(*pos)++;
-								return DIV;
+								return CONST;
+						case 'F':
+								(*pos)++;
+								return CONST;
 						case '(':
 								(*pos)++;
 								return APAR;
@@ -148,25 +194,22 @@ int lex (char *str, int *pos)
 					}
 					break;
 			case 1:
-				if(isdigit(c))
-					(*pos)++;
-				else
-					if (c == '.')
-					{
+				if (c == '-')
+				{
 						estado = 3;
 						(*pos)++;
-					}
-					else
-					{
-						//Adicionar constante na tabela de simbolos.
-						return CONST;
-					}
-					break;
-			case 2:
-				if (isdigit(c))
+				}
+				else
 				{
 					(*pos)++;
-					estado = 3;
+					return ERRO;
+				}	
+				break;
+			case 2: 
+				if (c == '>')   
+				{
+					(*pos)++;
+					return IMP;
 				}
 				else
 				{
@@ -175,12 +218,11 @@ int lex (char *str, int *pos)
 				}
 				break;
 			case 3:
-				if (isdigit(c))
+				if (c == '>')
 					(*pos)++;
 				else
 				{
-					//Adicionar a constante na tabela de simbolos.
-					return CONST;
+					return BIIMP;
 				}
 				break;
 			default:
@@ -268,7 +310,7 @@ int remover (struct Pilha *p)
 ******************************************************************/
 
 
-int consulta (struct Pilha *p)
+int consulta (struct Pilha *p)	
 {
 	if (p->topo >= 0)
 		return p->dado[p->topo];
@@ -293,21 +335,22 @@ void parser(char *expr)
 	inicializa(&pilha);
 	insere(&pilha, FIM);
 	insere(&pilha, EXPR);
+
 	if ((a = lex(expr, &pos)) == ERRO)
-		erro("Erro lexico", expr, pos);
+		erro("Erro lexico\n", expr, pos);
 	do
 	{
 		x = consulta(&pilha);
-		if (!(x&NTER))
-		{
+		if (!(x&NTER))    
+		{	
 			if (x == a)
 			{
 				remover (&pilha);
 				if ((a = lex(expr, &pos)) == ERRO)
-					erro("Erro lexico", expr, pos);
+					erro("Erro lexico\n", expr, pos);
 			}
 			else
-				erro("Erro sintatico",expr, pos);
+				erro("Erro sintatico 1 \n",expr, pos);
 		}
 		if (x&NTER)
 		{
@@ -320,10 +363,11 @@ void parser(char *expr)
 					insere (&pilha, producao[i]);
 			}
 			else
-				erro ("Erro sintatico", expr, pos);
+				erro ("Erro sintatico\n", expr, pos);
 		}
 	} while (x != FIM);
 }
+
 
 void main()
 {
@@ -332,5 +376,5 @@ void main()
 	printf("\nDigite uma expressao: ");
 	gets(expr);
 	parser(expr);
-	printf("Expressao sintaticamente correta");
+	printf("Expressao sintaticamente correta\n");
 }
