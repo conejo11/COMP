@@ -6,7 +6,7 @@
 * Modificado para exercício de lógica. Aula de COMP              *
 * Gabriel Guebarra Conejo & Bruna Silva Tavares                  *
 ******************************************************************/
-<<<<<<< HEAD
+
 
 /*   Gramática Utilizada e produções
 =======
@@ -30,7 +30,6 @@
 	F' => c/
 		  (E)
 	*/
-<<<<<<< HEAD
 
 
 /*    Tabela LL Utilizada
@@ -45,14 +44,10 @@ F'   0   0   0  0   0  11  12   0   0
 
  */
 
-=======
->>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>
-
-		  877+8734
 
 /* Nao terminais o bit mais significativo ligado indica que se trata de um nao
 terminal */
@@ -64,7 +59,7 @@ terminal */
 #define FATORL  0x8006
 
 /* Terminais */
-<<<<<<< HEAD
+
 #define ERRO 	 0x0000    // Erro?
 #define E        0x0100    // ->
 #define OU   	 0X0200    // <->
@@ -75,18 +70,7 @@ terminal */
 #define APAR     0x0700    // )
 #define FPAR     0x0800    // ~
 #define FIM      0x0900    // fim?
-=======
-#define ERRO 	0x0000    // Erro?
-#define IMP     0x0100    // ->
-#define BIIMP 	0X0200    // <->
-#define OU      0x0300    // |
-#define E		0x0400    // &
-#define CONST   0x0500    // c
-#define APAR    0x0600    // (
-#define FPAR    0x0700    // )
-#define NOT     0x0800    // ~
-#define FIM     0x0900    // fim?
->>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
+
 
 //Mascaras
 #define NTER   0x8000
@@ -111,11 +95,7 @@ const int PROD5[]  = {2, FATOR, TERMOL};         // T   => FT'
 const int PROD6[]  = {3, OU, FATOR, TERMOL};     // T'  => |FT'
 const int PROD7[]  = {3, E, FATOR, TERMOL};      // T'  => &FT'
 const int PROD8[]  = {0};                        // T'  => vazio
-<<<<<<< HEAD
 const int PROD9[]  = {2, NOT, FATOR};           // F   => ~F
-=======
-const int PROD9[]  = {2, NOT, FATORL};           // F   => ~F'
->>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 const int PROD10[] = {1, FATORL};                // F   => F'
 const int PROD11[] = {1, CONST};                 // F'  => const
 const int PROD12[] = {3, APAR, EXPR, FPAR};      // F'  => (E)
