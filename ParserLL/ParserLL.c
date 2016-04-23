@@ -9,9 +9,8 @@
 
 
 /*   Gramática Utilizada e produções
-=======
+
 /*
->>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
 
 	E  => TE'                                 
 	E' => ->TE'/
@@ -21,11 +20,9 @@
 	T' => |FT'/
 		  &FT'/
 		  vazio
-<<<<<<< HEAD
 	F  => ~F/
-=======
 	F  => ~F'/
->>>>>>> 6131a4f4e31335acd43eb87c5a84e39acc40f408
+
 		  F'
 	F' => c/
 		  (E)
