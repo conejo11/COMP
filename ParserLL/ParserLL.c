@@ -21,8 +21,6 @@
 		  &FT'/
 		  vazio
 	F  => ~F/
-	F  => ~F'/
-
 		  F'
 	F' => c/
 		  (E)
@@ -48,24 +46,24 @@ F'   0   0   0  0   0  11  12   0   0
 
 /* Nao terminais o bit mais significativo ligado indica que se trata de um nao
 terminal */
-#define EXPR    0x8001     //
-#define EXPRL   0x8002
-#define TERMO   0x8003
-#define TERMOL  0x8004
-#define FATOR   0x8005
-#define FATORL  0x8006
+#define EXPR    0x8001     //E
+#define EXPRL   0x8002     //E'
+#define TERMO   0x8003     //T
+#define TERMOL  0x8004     //T'
+#define FATOR   0x8005     //F
+#define FATORL  0x8006     //F'
 
 /* Terminais */
 
 #define ERRO 	 0x0000    // Erro?
-#define E        0x0100    // ->
-#define OU   	 0X0200    // <->
-#define IMP      0x0300    // |
-#define BIIMP	 0x0400    // &
-#define NOT      0x0500    // c
-#define CONST    0x0600    // (
-#define APAR     0x0700    // )
-#define FPAR     0x0800    // ~
+#define E        0x0100    // &
+#define OU   	 0X0200    // |
+#define IMP      0x0300    // ->
+#define BIIMP	 0x0400    // <->
+#define NOT      0x0500    // ~
+#define CONST    0x0600    // c
+#define APAR     0x0700    // (
+#define FPAR     0x0800    // )
 #define FIM      0x0900    // fim?
 
 
@@ -92,7 +90,7 @@ const int PROD5[]  = {2, FATOR, TERMOL};         // T   => FT'
 const int PROD6[]  = {3, OU, FATOR, TERMOL};     // T'  => |FT'
 const int PROD7[]  = {3, E, FATOR, TERMOL};      // T'  => &FT'
 const int PROD8[]  = {0};                        // T'  => vazio
-const int PROD9[]  = {2, NOT, FATOR};           // F   => ~F
+const int PROD9[]  = {2, NOT, FATOR};            // F   => ~F
 const int PROD10[] = {1, FATORL};                // F   => F'
 const int PROD11[] = {1, CONST};                 // F'  => const
 const int PROD12[] = {3, APAR, EXPR, FPAR};      // F'  => (E)
@@ -134,11 +132,11 @@ int lex (char *str, int *pos)
 						case ' ':
 							(*pos)++;
 							break;
-						case '<':       // inicio da bimplicaçao
+						case '<': //biimp
 								(*pos)++;
 								estado = 1;
 								break;						
-						case '-':  		// inicio da implicaçao
+						case '-': //imp
 								(*pos)++;
 								estado = 2;
 								break;
